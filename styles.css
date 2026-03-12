@@ -775,8 +775,8 @@
       object-fit: cover;
       object-position: center center;
       background: transparent;
-      filter: grayscale(1) contrast(0.95) brightness(0.9);
-      opacity: .58;
+      filter: none;
+      opacity: 1;
     }
 
     /* Media blocks (везде одно изображение) */
@@ -789,6 +789,67 @@
       align-items: center;
       justify-content: center;
       padding: 12px;
+    }
+
+    /* Skeleton loading */
+    .skeleton-card {
+      pointer-events: none;
+    }
+
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      background: rgba(0, 0, 0, .06);
+    }
+
+    .skeleton::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, .25),
+          transparent);
+      animation: skeleton-shimmer 1.2s infinite;
+    }
+
+    .skeleton-media {
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      border: none;
+      background-clip: padding-box;
+    }
+
+    .skeleton-line {
+      height: 12px;
+      border-radius: 999px;
+      margin-top: 8px;
+    }
+
+    .skeleton-line-lg {
+      width: 80%;
+    }
+
+    .skeleton-line-sm {
+      width: 40%;
+    }
+
+    .skeleton-row .media.skeleton-media {
+      aspect-ratio: 16/9;
+      padding-bottom: 0;
+      height: 120px;
+    }
+
+    @keyframes skeleton-shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100%);
+      }
     }
 
     /* Карточки артистов: высота по контенту, квадратное фото, без пустых блоков */
@@ -882,7 +943,9 @@
       border: none;
       box-shadow: none;
       transition: background .25s ease, color .25s ease;
-      overflow: visible;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     #eventsGrid .event-card:hover,
@@ -936,10 +999,9 @@
     #eventsGrid .event-media {
       width: 100%;
       max-width: 100%;
-      height: auto;
+      aspect-ratio: 4/5;
       overflow: hidden;
       padding: 0;
-      aspect-ratio: unset;
       border: none;
       background: transparent;
       display: block;
@@ -948,9 +1010,9 @@
     #eventsGrid .event-poster img,
     #eventsGrid .event-media img {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
-      object-fit: contain;
+      object-fit: cover;
       max-width: 100%;
       vertical-align: top;
     }

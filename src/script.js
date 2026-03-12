@@ -1,3 +1,5 @@
+// Copied from original script.js with no behavior changes.
+
 // IMPORTANT:
 // 1) Сохрани твою картинку рядом с index.html
 // 2) Назови файл https://rvswpgsxutfcpgvmzonr.supabase.co/storage/v1/object/public/images/logo.png (или поменяй все src="https://rvswpgsxutfcpgvmzonr.supabase.co/storage/v1/object/public/images/logo.png" на свое имя)
@@ -300,13 +302,17 @@ function createMedia(imgSrc, imgAlt, className = "media") {
   const img = document.createElement("img");
 
   const defaultLogo = "https://rvswpgsxutfcpgvmzonr.supabase.co/storage/v1/object/public/images/logo.png";
-  let src = imgSrc;
+  const raw = String(imgSrc || "").trim();
 
-  // Если пути нет, или база вернула старое значение 'logo.png'
-  if (!src || src === "logo.png" || src === "smile.png") {
+  let src;
+  if (!raw || raw === "logo.png" || raw === "smile.png") {
     src = defaultLogo;
-  } else if (!/^https?:\/\//i.test(src)) {
-    src = ASSET_PREFIX + src.replace(/^\/+/, '');
+  } else if (/^https?:\/\//i.test(raw)) {
+    src = raw;
+  } else if (ASSET_PREFIX) {
+    src = ASSET_PREFIX + raw.replace(/^\/+/, "");
+  } else {
+    src = defaultLogo;
   }
 
   img.src = src;
@@ -905,7 +911,36 @@ document.addEventListener("click", (e) => {
 
 $("#artistSearch")?.addEventListener("input", () => renderArtists());
 
+function renderSkeletonGrid(selector, count = 4, variant = "default") {
+  const wrap = $(selector);
+  if (!wrap) return;
+  wrap.replaceChildren();
+
+  for (let i = 0; i < count; i += 1) {
+    const card = el("div", { className: `card skeleton-card ${variant === "row" ? "skeleton-row" : ""}` });
+
+    const media = el("div", { className: "media skeleton skeleton-media" });
+    card.appendChild(media);
+
+    const pad = el("div", { className: "pad" });
+    const line1 = el("div", { className: "skeleton skeleton-line skeleton-line-lg" });
+    const line2 = el("div", { className: "skeleton skeleton-line skeleton-line-sm" });
+    pad.appendChild(line1);
+    pad.appendChild(line2);
+    card.appendChild(pad);
+
+    wrap.appendChild(card);
+  }
+}
+
 const initApp = async () => {
+  // Показать скелетоны до загрузки данных из БД
+  renderSkeletonGrid("#eventsGrid", 6);
+  renderSkeletonGrid("#artistsGrid", ARTISTS_VISIBLE);
+  renderSkeletonGrid("#releasesGrid", 4);
+  renderSkeletonGrid("#streamsList", 4, "row");
+  renderSkeletonGrid("#merchGrid", 4);
+
   if (window.dbLayer) {
     await window.dbLayer.syncDefaultData();
     const [events, artists, releases, podcasts, streams, merch] = await Promise.all([
@@ -936,3 +971,4 @@ const initApp = async () => {
 };
 
 document.addEventListener("DOMContentLoaded", initApp);
+

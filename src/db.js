@@ -177,3 +177,4 @@ export {
   createEvent, updateEvent, deleteEvent,
   createArtist, updateArtist, deleteArtist
 };
+

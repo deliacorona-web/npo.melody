@@ -221,3 +221,22 @@ body.admin-body {
   padding-top: 20px;
   border-top: 1px solid var(--bd-100, rgba(255,255,255,0.1));
 }
+
+/* --- Специфичные правки для админки, чтобы не конфликтовать с публичным сайтом --- */
+
+/* Убираем глобальные фоновые оверлеи, заданные для публичного сайта */
+body.admin-body::before,
+body.admin-body::after {
+  content: none !important;
+}
+
+/* Своя палитра и фон только для админки */
+body.admin-body {
+  --bg-100: #050505;
+  --txt-100: #fdfdfd;
+  --txt-200: rgba(255, 255, 255, 0.7);
+  --bd-100: rgba(255, 255, 255, 0.16);
+  --bg-tr: rgba(15, 15, 15, 0.85);
+  --bg-btn: #ffffff;
+  --bg-img: none;
+}
