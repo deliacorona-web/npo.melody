@@ -512,10 +512,10 @@ function buildEventModalBody(eventItem) {
 
   if (eventItem.address) {
     appendDivider(right);
-    const addrRow = el("div", { className: "row" });
-    addrRow.appendChild(el("span", { className: "tag", text: "Адрес" }));
-    addrRow.appendChild(el("span", { className: "muted", text: eventItem.address }));
-    right.appendChild(addrRow);
+    right.appendChild(el("b", { text: "Адрес" }));
+    const addressEl = el("div", { className: "muted", text: eventItem.address });
+    addressEl.style.marginTop = "8px";
+    right.appendChild(addressEl);
   }
 
   const ticketUrl = safeHttpUrl(eventItem.ticketUrl);

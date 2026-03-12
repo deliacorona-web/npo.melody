@@ -1259,7 +1259,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto auto;
-      gap: 14px;
+      gap: 10px;
     }
 
     .event-modal-wrap .event-modal-left {
@@ -1976,7 +1976,7 @@
 .event-modal-wrap {
   display: grid;
   grid-template-columns: 300px 1fr; /* Левая колонка 300px (картинка), правая - всё остальное пространство */
-  gap: 20px;
+  gap: 10px;
   align-items: start;
 }
 
@@ -1987,7 +1987,7 @@
 
 .event-modal-left .media {
   width: 100%;
-  border-radius: 8px; /* Скругление углов, если нужно */
+  border-radius: 0; /* без скругления углов */
   overflow: hidden;
 }
 
@@ -1998,17 +1998,22 @@
   object-fit: cover;
 }
 
-/* Блок с кнопкой (растягиваем на всю ширину снизу) */
+/* Блок с кнопкой (растягиваем на всю ширину снизу, ближе к картинке) */
 .event-modal-actions {
-  grid-column: 1 / -1; /* Говорим блоку занять обе колонки */
+  grid-column: 1; /* под картинкой слева */
   display: flex;
-  justify-content: flex-end; /* Кнопка будет прижата к правому краю */
-  margin-top: 10px;
+  justify-content: center;
+  margin-top: 0;
 }
 
 /* Мобильная версия: складываем блоки друг под друга на узких экранах */
 @media (max-width: 768px) {
   .event-modal-wrap {
     grid-template-columns: 1fr; /* Одна колонка */
+  }
+
+  .event-modal-actions {
+    grid-column: 1;
+    justify-content: center;
   }
 }
