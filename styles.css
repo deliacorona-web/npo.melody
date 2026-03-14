@@ -494,17 +494,21 @@
 
     .open-card:hover .catalog-title,
     .open-card:hover .artist-card-name,
+    .open-card:hover .merch-card-title,
     .open-card:hover .catalog-meta,
     .open-card:active .catalog-title,
     .open-card:active .artist-card-name,
+    .open-card:active .merch-card-title,
     .open-card:active .catalog-meta,
     .open-card.is-pressed .catalog-title,
     .open-card.is-pressed .artist-card-name,
+    .open-card.is-pressed .merch-card-title,
     .open-card.is-pressed .catalog-meta {
       font-weight: 900;
     }
 
-    #artistsGrid .open-card .pad {
+    #artistsGrid .open-card .pad,
+    #merchGrid .open-card .pad {
       padding: 12px;
     }
 
@@ -899,6 +903,43 @@
       display: block;
     }
 
+    /* Карточки мерча: как у артистов — без рамки вокруг изображения */
+    #merchGrid {
+      align-items: start;
+    }
+
+    #merchGrid .merch-card {
+      height: auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #merchGrid .merch-card .media {
+      width: 100%;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      padding: 0;
+      border: none;
+      background: transparent;
+      display: block;
+      flex: none;
+    }
+
+    #merchGrid .merch-card .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    #merchGrid .merch-card .merch-card-body {
+      padding: 12px;
+      min-height: 0;
+      flex: none;
+      display: block;
+    }
+
     /* Релизы: без рамки, на всю ширину */
     #releasesGrid .open-card .media {
       width: 100%;
@@ -1142,6 +1183,10 @@
     }
 
     .modal-header-text {
+      position: absolute;
+      left: 50%;
+      top: 60%;
+      transform: translate(-50%, -50%);
       min-width: 0;
       text-align: center;
     }
@@ -1170,10 +1215,7 @@
     }
 
     .modal-sub {
-      margin-top: 6px;
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.4;
+      display: none;
     }
 
     .modal-body {
@@ -1555,12 +1597,14 @@
         padding: 6px;
       }
 
-      #artistsGrid .artist-card .media {
+      #artistsGrid .artist-card .media,
+      #merchGrid .merch-card .media {
         padding: 0;
         aspect-ratio: 1/1;
       }
 
-      #artistsGrid .artist-card .artist-card-body {
+      #artistsGrid .artist-card .artist-card-body,
+      #merchGrid .merch-card .merch-card-body {
         padding: 12px;
         min-height: 0;
       }
@@ -2086,11 +2130,14 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
+  box-sizing: border-box;
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   padding: 0;
-  border: 1px solid var(--border);
-  background: var(--card);
+  border: none;
+  background: transparent;
   color: var(--text);
   cursor: pointer;
   border-radius: 4px;
@@ -2098,12 +2145,16 @@
   align-items: center;
   justify-content: center;
   font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
   transition: background 0.2s, color 0.2s;
 }
 
-.merch-modal-carousel .carousel-arrow:hover {
-  background: var(--surface-hover);
-  color: var(--text-hover);
+.merch-modal-carousel .carousel-arrow span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .merch-modal-carousel .carousel-arrow-prev {

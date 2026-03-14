@@ -492,11 +492,11 @@ function renderMerch() {
   wrap.replaceChildren();
 
   data.merch.forEach((item) => {
-    const card = el("div", { className: "card" });
+    const card = el("div", { className: "card merch-card" });
     card.appendChild(createMedia(item.image || item.poster || item.cover || "logo.png", item.title, "media square"));
 
-    const pad = el("div", { className: "pad" });
-    pad.appendChild(el("b", { text: item.title }));
+    const pad = el("div", { className: "pad merch-card-body" });
+    pad.appendChild(el("b", { className: "merch-card-title", text: item.title }));
 
     const price = el("div", { className: "muted", text: item.price });
     price.style.marginTop = "6px";
