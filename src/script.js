@@ -375,21 +375,63 @@ function resolveImageSrc(imgSrc) {
 function renderEvents() {
   const wrap = $("#eventsGrid");
   if (!wrap) return;
+
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterdayStart = new Date(todayStart);
+  yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+
+  const isUpcoming = (e) => {
+    const d = new Date(e.date);
+    const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return dayStart >= yesterdayStart;
+  };
+
+  const upcoming = [...data.events].filter(isUpcoming).reverse();
+  const old = [...data.events].filter((e) => !isUpcoming(e)).reverse();
+
   wrap.replaceChildren();
 
-  const list = [...data.events].reverse();
-
-  list.forEach((eventItem) => {
+  upcoming.forEach((eventItem) => {
     const card = el("div", { className: "card event-card" });
     card.appendChild(createMedia(eventItem.poster || "logo.png", eventItem.title, "media event-media event-poster"));
-
     const pad = el("div", { className: "pad" });
     pad.appendChild(el("b", { className: "event-card-title", text: eventItem.title }));
-
     card.appendChild(pad);
     setupOpenCard(card, "event", eventItem.id);
     wrap.appendChild(card);
   });
+
+  if (old.length > 0) {
+    const container = wrap.closest(".container");
+    let oldWrap = $("#eventsOldWrap");
+    if (oldWrap) oldWrap.remove();
+
+    oldWrap = el("div", { id: "eventsOldWrap", className: "events-old-wrap" });
+    const btn = el("button", { className: "btn events-expand-btn", text: "Раскрыть прошедшие" });
+    const oldGrid = el("div", { className: "grid g4 events-old-grid", id: "eventsOldGrid" });
+    oldGrid.style.display = "none";
+
+    old.forEach((eventItem) => {
+      const card = el("div", { className: "card event-card" });
+      card.appendChild(createMedia(eventItem.poster || "logo.png", eventItem.title, "media event-media event-poster"));
+      const pad = el("div", { className: "pad" });
+      pad.appendChild(el("b", { className: "event-card-title", text: eventItem.title }));
+      card.appendChild(pad);
+      setupOpenCard(card, "event", eventItem.id);
+      oldGrid.appendChild(card);
+    });
+
+    btn.addEventListener("click", () => {
+      const isHidden = oldGrid.style.display === "none";
+      oldGrid.style.display = isHidden ? "" : "none";
+      btn.textContent = isHidden ? "Свернуть" : "Раскрыть прошедшие";
+    });
+
+    oldWrap.appendChild(btn);
+    oldWrap.appendChild(oldGrid);
+    container.appendChild(oldWrap);
+  }
 }
 
 function renderArtists() {
