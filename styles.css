@@ -542,8 +542,9 @@
     }
 
     #artistsGrid .open-card .pad,
-    #merchGrid .open-card .pad {
-      padding: 12px;
+    #merchGrid .open-card .pad,
+    #releasesGrid .open-card .pad {
+      padding: 8px;
     }
 
     #artistsGrid .artist-card .artist-card-name {
@@ -903,6 +904,7 @@
     /* Карточки артистов: высота по контенту, квадратное фото, без пустых блоков */
     #artistsGrid {
       align-items: start;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     #artistsGrid .artist-card {
@@ -931,7 +933,7 @@
     }
 
     #artistsGrid .artist-card .artist-card-body {
-      padding: 12px;
+      padding: 8px;
       min-height: 0;
       flex: none;
       display: block;
@@ -940,6 +942,7 @@
     /* Карточки мерча: как у артистов — без рамки вокруг изображения */
     #merchGrid {
       align-items: start;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     #merchGrid .merch-card {
@@ -968,10 +971,16 @@
     }
 
     #merchGrid .merch-card .merch-card-body {
-      padding: 12px;
+      padding: 8px;
       min-height: 0;
       flex: none;
       display: block;
+    }
+
+    /* Релизы: без рамки, на всю ширину — компактная сетка как у артистов/мерча */
+    #releasesGrid {
+      align-items: start;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     /* Релизы: без рамки, на всю ширину */
@@ -1513,6 +1522,12 @@
       .g4 {
         grid-template-columns: repeat(3, minmax(0, 1fr))
       }
+
+      #artistsGrid,
+      #merchGrid,
+      #releasesGrid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 980px) {
@@ -1526,6 +1541,12 @@
 
       .g4 {
         grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      #artistsGrid,
+      #merchGrid,
+      #releasesGrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .g3 {
