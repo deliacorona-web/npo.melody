@@ -155,21 +155,24 @@ function renderClubAccess() {
     profileSection.style.display = userIsAuthenticated ? "none" : "";
   }
 
-  // UI updates by auth state: hide login/register when authenticated, show profile button
+  // При отсутствии авторизации: только «Вход», кнопка с картинкой профиля скрыта. При авторизации — наоборот.
   const loginForms = $$(".login-form, .register-form");
   const loginRegisterButtons = $$(".login-register-buttons");
   const profileButtons = $$(".profile-button");
+  const authOpenButtons = $$(".auth-open-button");
 
   loginForms.forEach((el) => { el.style.display = userIsAuthenticated ? "none" : ""; });
   loginRegisterButtons.forEach((el) => { el.style.display = userIsAuthenticated ? "none" : "grid"; });
+
+  authOpenButtons.forEach((el) => {
+    el.style.display = userIsAuthenticated ? "none" : "";
+    if (userIsAuthenticated) el.setAttribute("hidden", "");
+    else el.removeAttribute("hidden");
+  });
   profileButtons.forEach((el) => {
+    el.style.display = userIsAuthenticated ? "" : "none";
     if (userIsAuthenticated) {
       el.removeAttribute("hidden");
-      const icon = el.querySelector(".profile-button-icon");
-      if (icon) {
-        icon.classList.add("user-avatar");
-        icon.setAttribute("aria-hidden", "true");
-      }
     } else {
       el.setAttribute("hidden", "");
     }
@@ -718,6 +721,21 @@ function buildProfileModalBody() {
   return wrap;
 }
 
+let authModalContent = null;
+
+function openAuthModal() {
+  if (authModalContent == null) {
+    const authStatus = $("#authStatus");
+    const authGuest = $("#authGuest");
+    if (!authGuest) return;
+    authModalContent = document.createElement("div");
+    authModalContent.className = "auth-modal-content";
+    if (authStatus) authModalContent.appendChild(authStatus);
+    authModalContent.appendChild(authGuest);
+  }
+  openModal({ title: "Вход / Регистрация", sub: "", body: authModalContent });
+}
+
 function openProfileModal() {
   if (!clubSession) return;
   const userName = clubSession?.name || clubSession?.email || "Профиль";
@@ -742,13 +760,23 @@ modal?.addEventListener("click", (e) => {
   if (e.target === modal) closeModal();
 });
 
-// Профиль: при авторизации открывать модалку, а не секцию на странице
+// Профиль: по клику — модалка; неавторизованным в том же месте показываем «Вход», по клику — модалка входа
 document.addEventListener("click", (e) => {
   const profileTrigger = e.target.closest(".profile-button, a[href='#profile']");
   if (profileTrigger && clubSession) {
     e.preventDefault();
     openProfileModal();
     return;
+  }
+  if (profileTrigger && !clubSession) {
+    e.preventDefault();
+    openAuthModal();
+    return;
+  }
+  const authOpenTrigger = e.target.closest(".auth-open-button");
+  if (authOpenTrigger) {
+    e.preventDefault();
+    openAuthModal();
   }
 });
 
